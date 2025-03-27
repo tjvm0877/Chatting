@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: chatting
+  datasource:
+    url: jdbc:h2:mem:chat
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
