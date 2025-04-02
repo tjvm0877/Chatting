@@ -1,0 +1,23 @@
+.ChatEditor {
+  background-color: #232323;
+  height: 8%;
+  display: flex;
+  margin: 1em 2em;
+}
+
+.ChatEditor > input {
+  padding: 0.5em;
+  font-size: 1.2em;
+  color: #f1efec;
+  width: 90%;
+  background-color: #232323;
+  border: none;
+}
+
+.ChatEditor > button {
+  width: 10%;
+}
+
+input:focus {
+  outline: none;
+}

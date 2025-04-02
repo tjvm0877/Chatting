@@ -1,0 +1,36 @@
+.MessageItem {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  max-width: 75%;
+  gap: 0 0.5em;
+}
+
+.MessageItem.type_send {
+  margin-left: auto;
+}
+
+.MessageItem.type_received {
+  margin-right: auto;
+}
+
+.MessageItem .content {
+  font-weight: normal;
+  color: black;
+  padding: 0.5em;
+  border-radius: 0.5em;
+}
+
+.MessageItem.type_send .content {
+  background-color: #f7dc6f;
+}
+
+.MessageItem.type_received .content {
+  background-color: #c9e4ca;
+}
+
+.MessageItem .timestamp {
+  font-size: 0.8em;
+  color: gray;
+  white-space: nowrap;
+}
