@@ -1,6 +1,4 @@
 import './Sidebar.css';
-import profileImege from '../assets/profile.png';
-import add from '../assets/add-chat-dark.png';
 
 const Sidebar = () => {
   return <div className="Sidebar"></div>;

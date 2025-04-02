@@ -1,8 +1,8 @@
 .ChatEditor {
   background-color: #232323;
-  height: 8%;
+  height: 5%;
   display: flex;
-  margin: 1em 2em;
+  margin: 2em 2em;
 }
 
 .ChatEditor > input {

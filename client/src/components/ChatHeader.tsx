@@ -7,7 +7,7 @@ const ChatHeader = () => {
       <div className="image-wrapper">
         <img src={profileImege} alt="profile image" />
       </div>
-      <div className="content">1:1 Chatting</div>
+      <div className="content">Open Chatting</div>
     </div>
   );
 };
