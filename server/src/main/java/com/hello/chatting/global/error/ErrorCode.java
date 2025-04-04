@@ -13,7 +13,10 @@ public enum ErrorCode {
 	ENTITY_NOT_FOUND(400, " Entity Not Found"),
 	INTERNAL_SERVER_ERROR(500, "Server Error"),
 	INVALID_TYPE_VALUE(400, " Invalid Type Value"),
-
+	UNAUTHORIZED(401, " Unauthorized"),
+	
+	// Member
+	EMAIL_DUPLICATE(400, " Email Duplication"),
 	;
 	private final int status;
 	private final String message;
