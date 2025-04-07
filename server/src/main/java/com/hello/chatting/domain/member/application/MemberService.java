@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hello.chatting.domain.member.domain.Member;
+import com.hello.chatting.domain.member.dto.LoginResponse;
 import com.hello.chatting.domain.member.dto.MemberResponse;
 import com.hello.chatting.domain.member.dto.SignInRequest;
 import com.hello.chatting.domain.member.dto.SignUpRequest;
@@ -34,14 +35,14 @@ public class MemberService {
 		return MemberResponse.of(member);
 	}
 
-	public String signIn(SignInRequest request) {
+	public LoginResponse signIn(SignInRequest request) {
 		Member member = memberRepository.findByEmail(request.email()).orElseThrow(
 			() -> new BusinessException(ErrorCode.UNAUTHORIZED)
 		);
 		if (!member.isValidPassword(request.password())) {
 			throw new BusinessException(ErrorCode.UNAUTHORIZED);
 		}
-		return jwtProvider.generateAccessToken(member.getId());
+		return new LoginResponse(jwtProvider.generateAccessToken(member.getId()));
 	}
 
 	public List<MemberResponse> findAllMembers() {

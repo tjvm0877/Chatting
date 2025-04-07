@@ -2,7 +2,6 @@ package com.hello.chatting.domain.member.api;
 
 import java.util.List;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,8 +36,7 @@ public class MemberController {
 
 	@PostMapping("/sign-in")
 	public ResponseEntity<?> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
-		String token = memberService.signIn(request);
-		return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).build();
+		return ResponseEntity.ok(memberService.signIn(request));
 	}
 
 	@GetMapping
