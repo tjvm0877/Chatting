@@ -11,8 +11,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message {
 
 	@Id
@@ -29,5 +34,9 @@ public class Message {
 
 	private String content;
 
-	private LocalDateTime timestamp;
+	public Message(Member sender, Chat chat, String content) {
+		this.sender = sender;
+		this.chat = chat;
+		this.content = content;
+	}
 }

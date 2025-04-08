@@ -5,10 +5,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hello.chatting.domain.chat.Repository.ChatMemberRepository;
 import com.hello.chatting.domain.chat.Repository.ChatRepository;
-import com.hello.chatting.domain.chat.Repository.MessageRepository;
 import com.hello.chatting.domain.chat.domain.Chat;
 import com.hello.chatting.domain.chat.domain.ChatMember;
-import com.hello.chatting.domain.chat.domain.Message;
+import com.hello.chatting.domain.chat.dto.CreateChatRequest;
 import com.hello.chatting.domain.member.domain.Member;
 import com.hello.chatting.domain.member.repository.MemberRepository;
 import com.hello.chatting.global.error.BusinessException;
@@ -19,32 +18,26 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ChatService {
+public class ChatManageService {
 
-	private final MemberRepository memberRepository;
 	private final ChatRepository chatRepository;
 	private final ChatMemberRepository chatMemberRepository;
-	private final MessageRepository messageRepository;
+	private final MemberRepository memberRepository;
 
-	public boolean isChatExist(Long chatId) {
-		return chatRepository.existsById(chatId);
-	}
-
-	// 채팅방 존재 확인
-	public boolean isChatMember(Long chatId, Long memberId) {
-		return chatMemberRepository.isChatMemberExist(chatId, memberId);
-	}
-
-	// 채팅 메시지 기록
-	// TODO: 이건 동시성 관리 필할듯
 	@Transactional
-	public void saveMessageLog(Long chatId, Long memberId, String message) {
-		Chat chat = chatRepository.findById(chatId)
-			.orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+	public void createChat(Long memberId, CreateChatRequest request) {
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
-		Message log = new Message(member, chat, message);
-		messageRepository.save(log);
+		Member recipient = memberRepository.findByName(request.recipientName())
+			.orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+
+		Chat chat = new Chat(member.getName() + "-" + recipient.getName());
+		chatRepository.save(chat);
+
+		ChatMember creatorChatMember = new ChatMember(chat, member);
+		ChatMember recipientChatMember = new ChatMember(chat, recipient);
+		chatMemberRepository.save(creatorChatMember);
+		chatMemberRepository.save(recipientChatMember);
 	}
 }

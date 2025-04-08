@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class MessageFrame {
 	private CommandType type;
-	private String destination;
+	private Long destination;
 	private String body;
 }

@@ -6,11 +6,11 @@ public interface MessageBroker {
 
 	boolean auth(String sessionId, String token);
 
-	void subscribe(String sessionId, String topic);
+	void subscribe(String sessionId, Long topic);
 
-	void unsubscribe(String sessionId, String topic);
+	void unsubscribe(String sessionId, Long topic);
 
-	void publish(String sessionId, String topic, String message);
+	void publish(String sessionId, Long topic, String message);
 
 	void addSession(WebSocketSession session);
 

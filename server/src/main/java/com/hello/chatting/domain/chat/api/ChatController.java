@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hello.chatting.domain.chat.application.ChatService;
+import com.hello.chatting.domain.chat.application.ChatManageService;
 import com.hello.chatting.domain.chat.dto.CreateChatRequest;
 import com.hello.chatting.global.annotation.CurrentUser;
 import com.hello.chatting.global.annotation.LoginRequired;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatController {
 
-	private final ChatService chatService;
+	private final ChatManageService chatManageService;
 
 	// 방 생성
 	@PostMapping
@@ -28,11 +28,13 @@ public class ChatController {
 		@CurrentUser Long memberId,
 		@RequestBody @Valid CreateChatRequest request) {
 
-		chatService.createChat(memberId, request);
+		chatManageService.createChat(memberId, request);
 		return ResponseEntity.ok().build();
 	}
 
 	// 회원이 참가한 방 조회
 
 	// 방 삭제
+
+	// 채팅 기록 불러오기 -> 페이징 붙이면 될 것 같은데?
 }

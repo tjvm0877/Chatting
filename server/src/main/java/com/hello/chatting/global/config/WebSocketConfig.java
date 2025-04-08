@@ -7,6 +7,7 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hello.chatting.domain.chat.application.ChatService;
 import com.hello.chatting.global.jwt.JwtProvider;
 import com.hello.chatting.global.websocket.CustomMessageBroker;
 import com.hello.chatting.global.websocket.CustomWebsocketHandler;
@@ -21,6 +22,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 	private final ObjectMapper objectMapper;
 	private final JwtProvider jwtProvider;
+	private final ChatService chatService;
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -35,6 +37,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 	@Bean
 	public MessageBroker messageBroker() {
-		return new CustomMessageBroker(jwtProvider);
+		return new CustomMessageBroker(jwtProvider, chatService);
 	}
 }
