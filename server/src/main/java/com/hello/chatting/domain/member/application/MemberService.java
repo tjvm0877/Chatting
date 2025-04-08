@@ -48,4 +48,10 @@ public class MemberService {
 	public List<MemberResponse> findAllMembers() {
 		return memberRepository.findAll().stream().map((MemberResponse::of)).toList();
 	}
+
+	public MemberResponse getMemberInfo(Long memberId) {
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+		return MemberResponse.of(member);
+	}
 }

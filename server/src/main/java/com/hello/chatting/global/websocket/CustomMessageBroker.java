@@ -76,7 +76,7 @@ public class CustomMessageBroker implements MessageBroker {
 		}
 
 		subscriptionRegistry.get(topic).remove(sessionId);
-		sessions.get(sessionId).getSubscribeTopics().remove(topic);
+		sessions.get(sessionId).removeTopic(topic);
 	}
 
 	@Override
@@ -84,7 +84,6 @@ public class CustomMessageBroker implements MessageBroker {
 		if (isAuthorizationSession(sessionId) && !subscriptionRegistry.get(topic).contains(sessionId)) {
 			return;
 		}
-
 		subscriptionRegistry.getOrDefault(topic, Collections.emptyList())
 			.forEach(subscriberId -> {
 				try {
@@ -93,8 +92,6 @@ public class CustomMessageBroker implements MessageBroker {
 					e.printStackTrace(); // TODO: 예외 처리 변경
 				}
 			});
-
-		// 채팅방 기록 저장
 		chatService.saveMessageLog(topic, sessions.get(sessionId).getMemberId(), message);
 	}
 

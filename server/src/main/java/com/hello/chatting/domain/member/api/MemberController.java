@@ -13,6 +13,7 @@ import com.hello.chatting.domain.member.application.MemberService;
 import com.hello.chatting.domain.member.dto.MemberResponse;
 import com.hello.chatting.domain.member.dto.SignInRequest;
 import com.hello.chatting.domain.member.dto.SignUpRequest;
+import com.hello.chatting.global.annotation.CurrentUser;
 import com.hello.chatting.global.annotation.LoginRequired;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,8 +42,8 @@ public class MemberController {
 
 	@GetMapping
 	@LoginRequired
-	public ResponseEntity<?> findAll() {
-		List<MemberResponse> response = memberService.findAllMembers();
+	public ResponseEntity<?> getInfo(@CurrentUser Long memberId) {
+		MemberResponse response = memberService.getMemberInfo(memberId);
 		return ResponseEntity.ok(response);
 	}
 }

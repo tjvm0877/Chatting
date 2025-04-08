@@ -30,12 +30,10 @@ public class ChatService {
 		return chatRepository.existsById(chatId);
 	}
 
-	// 채팅방 존재 확인
 	public boolean isChatMember(Long chatId, Long memberId) {
 		return chatMemberRepository.isChatMemberExist(chatId, memberId);
 	}
 
-	// 채팅 메시지 기록
 	// TODO: 이건 동시성 관리 필할듯
 	@Transactional
 	public void saveMessageLog(Long chatId, Long memberId, String message) {
