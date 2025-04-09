@@ -1,5 +1,7 @@
 package com.hello.chatting.domain.chat.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,6 +9,7 @@ import com.hello.chatting.domain.chat.Repository.ChatMemberRepository;
 import com.hello.chatting.domain.chat.Repository.ChatRepository;
 import com.hello.chatting.domain.chat.domain.Chat;
 import com.hello.chatting.domain.chat.domain.ChatMember;
+import com.hello.chatting.domain.chat.dto.ChatInfo;
 import com.hello.chatting.domain.chat.dto.CreateChatRequest;
 import com.hello.chatting.domain.member.domain.Member;
 import com.hello.chatting.domain.member.repository.MemberRepository;
@@ -39,5 +42,13 @@ public class ChatManageService {
 		ChatMember recipientChatMember = new ChatMember(chat, recipient);
 		chatMemberRepository.save(creatorChatMember);
 		chatMemberRepository.save(recipientChatMember);
+	}
+
+	public List<ChatInfo> getJoinedChat(Long memberId) {
+		return chatMemberRepository.findByAllMemberId(memberId).stream()
+			.map(chatMember -> {
+				Chat chat = chatMember.getChat();
+				return new ChatInfo(chat.getId(), chat.getName());
+			}).toList();
 	}
 }

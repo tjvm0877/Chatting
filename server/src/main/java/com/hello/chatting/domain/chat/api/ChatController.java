@@ -1,12 +1,16 @@
 package com.hello.chatting.domain.chat.api;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hello.chatting.domain.chat.application.ChatManageService;
+import com.hello.chatting.domain.chat.dto.ChatInfo;
 import com.hello.chatting.domain.chat.dto.CreateChatRequest;
 import com.hello.chatting.global.annotation.CurrentUser;
 import com.hello.chatting.global.annotation.LoginRequired;
@@ -21,7 +25,6 @@ public class ChatController {
 
 	private final ChatManageService chatManageService;
 
-	// 방 생성
 	@PostMapping
 	@LoginRequired
 	public ResponseEntity<?> createChat(
@@ -32,7 +35,12 @@ public class ChatController {
 		return ResponseEntity.ok().build();
 	}
 
-	// 회원이 참가한 방 조회
+	@GetMapping
+	@LoginRequired
+	public ResponseEntity<?> getChatList(@CurrentUser Long memberId) {
+		List<ChatInfo> response = chatManageService.getJoinedChat(memberId);
+		return ResponseEntity.ok(response);
+	}
 
 	// 방 삭제
 

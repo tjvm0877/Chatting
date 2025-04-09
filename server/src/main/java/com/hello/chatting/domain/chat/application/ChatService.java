@@ -34,7 +34,6 @@ public class ChatService {
 		return chatMemberRepository.isChatMemberExist(chatId, memberId);
 	}
 
-	// TODO: 이건 동시성 관리 필할듯
 	@Transactional
 	public void saveMessageLog(Long chatId, Long memberId, String message) {
 		Chat chat = chatRepository.findById(chatId)
