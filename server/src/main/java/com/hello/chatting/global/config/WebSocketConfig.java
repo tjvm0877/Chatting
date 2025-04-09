@@ -37,6 +37,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 	@Bean
 	public MessageBroker messageBroker() {
-		return new CustomMessageBroker(jwtProvider, chatService);
+		return new CustomMessageBroker(jwtProvider, chatService, objectMapper);
 	}
 }

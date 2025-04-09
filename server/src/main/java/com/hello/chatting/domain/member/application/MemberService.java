@@ -42,7 +42,7 @@ public class MemberService {
 		if (!member.isValidPassword(request.password())) {
 			throw new BusinessException(ErrorCode.UNAUTHORIZED);
 		}
-		return new LoginResponse(jwtProvider.generateAccessToken(member.getId()));
+		return new LoginResponse(jwtProvider.generateAccessToken(member.getId(), member.getName()));
 	}
 
 	public List<MemberResponse> findAllMembers() {

@@ -10,10 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hello.chatting.domain.chat.application.ChatService;
 import com.hello.chatting.global.jwt.JwtProvider;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,6 +25,7 @@ public class CustomMessageBroker implements MessageBroker {
 
 	private final JwtProvider jwtProvider;
 	private final ChatService chatService;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public boolean auth(String sessionId, String token) {
@@ -37,7 +38,8 @@ public class CustomMessageBroker implements MessageBroker {
 			return false;
 		}
 		Long memberId = jwtProvider.getMemberIdFromToken(token);
-		sessions.put(sessionId, new SessionInfo(session, memberId));
+		String memberName = jwtProvider.getMemberNameFromToken(token);
+		sessions.put(sessionId, new SessionInfo(session, memberId, memberName));
 		return true;
 	}
 
@@ -84,10 +86,14 @@ public class CustomMessageBroker implements MessageBroker {
 		if (isAuthorizationSession(sessionId) && !subscriptionRegistry.get(topic).contains(sessionId)) {
 			return;
 		}
+		String memberName = sessions.get(sessionId).getMemberName();
 		subscriptionRegistry.getOrDefault(topic, Collections.emptyList())
 			.forEach(subscriberId -> {
 				try {
-					sessions.get(subscriberId).getSession().sendMessage(new TextMessage(message));
+
+					sessions.get(subscriberId).getSession().sendMessage(new TextMessage(
+						objectMapper.writeValueAsString(new MessageDto(topic, memberName, message))
+					));
 				} catch (IOException e) {
 					e.printStackTrace(); // TODO: 예외 처리 변경
 				}
@@ -119,24 +125,4 @@ public class CustomMessageBroker implements MessageBroker {
 		return sessions.containsKey(sessionId);
 	}
 
-	@Getter
-	private class SessionInfo {
-		WebSocketSession session;
-		Long memberId;
-		List<Long> subscribeTopics;
-
-		SessionInfo(WebSocketSession session, Long memberId) {
-			this.session = session;
-			this.memberId = memberId;
-			this.subscribeTopics = new ArrayList<>();
-		}
-
-		void addTopic(Long topic) {
-			subscribeTopics.add(topic);
-		}
-
-		void removeTopic(Long topic) {
-			subscribeTopics.remove(topic);
-		}
-	}
 }

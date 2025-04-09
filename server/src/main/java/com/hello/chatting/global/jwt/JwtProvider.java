@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtProvider {
 
 	private static final String BEARER_PREFIX = "Bearer ";
-	private static final String SUBJECT = "mid";
 	private final SecretKey secretKey;
 	private final Long ACCESS_TOKEN_EXPIRATION_TIME;
 
@@ -35,9 +34,10 @@ public class JwtProvider {
 		this.ACCESS_TOKEN_EXPIRATION_TIME = EXPIRATION_TIME;
 	}
 
-	public String generateAccessToken(Long memberId) {
+	public String generateAccessToken(Long memberId, String memberName) {
 		String token = Jwts.builder()
-			.claim(SUBJECT, memberId)
+			.claim("member", memberId)
+			.claim("name", memberName)
 			.issuedAt(new Date(System.currentTimeMillis()))
 			.expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
 			.signWith(secretKey)
@@ -62,7 +62,11 @@ public class JwtProvider {
 	}
 
 	public Long getMemberIdFromToken(String token) {
-		return parseClaims(token).get(SUBJECT, Long.class);
+		return parseClaims(token).get("member", Long.class);
+	}
+
+	public String getMemberNameFromToken(String token) {
+		return parseClaims(token).get("name", String.class);
 	}
 
 	private Claims parseClaims(String token) {
