@@ -43,7 +43,7 @@ public class JwtProvider {
 			.signWith(secretKey)
 			.compact();
 
-		return BEARER_PREFIX + token;
+		return token;
 	}
 
 	public boolean isValidToken(String token) {
