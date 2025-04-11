@@ -1,17 +1,4 @@
-.LoginPopup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.Login {
+.SignIn {
   width: 30%;
   height: 25%;
   border-radius: 10px;
@@ -22,19 +9,24 @@
   justify-content: space-around;
 }
 
-.login-header {
+.sign-in-header {
   font-size: 2.5em;
   font-weight: bold;
 }
 
-.lonin-container {
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.sign-in-container {
   width: 80%;
   display: flex;
   flex-direction: column;
   gap: 0.3em;
 }
 
-.lonin-container > .input-warpper {
+.sign-in-container > .input-warpper {
   border-radius: 5px;
   border: none;
 }
@@ -45,8 +37,12 @@
   box-sizing: border-box;
 }
 
-.lonin-container > button {
+.sign-in-container > button {
   background-color: #169976;
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  border-radius: 5px;
 }
 
 .other-container {
@@ -64,4 +60,9 @@
   color: white;
   border-bottom: 1px solid;
   cursor: pointer;
+}
+
+button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
 }

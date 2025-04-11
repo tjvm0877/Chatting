@@ -8,3 +8,9 @@
   color: #f1efec;
   white-space: nowrap;
 }
+
+/* Button.css */
+button[disabled] {
+  background-color: #ccc; /* 비활성화된 버튼 색상 */
+  cursor: not-allowed; /* 마우스 커서 변경 */
+}

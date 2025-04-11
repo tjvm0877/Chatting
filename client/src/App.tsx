@@ -1,37 +1,15 @@
-import { useState } from 'react';
 import './App.css';
 import ChatSection from './components/ChatSection';
 import Sidebar from './components/Sidebar';
-import LoginPopUp from './components/LoginPopup';
-import RegisterPopup from './components/RegisterPopup';
+import useAuthStore from './stores/authStore';
+import Popup from './components/PopUp';
 
 function App() {
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState<boolean>(true);
-  const [isRegisterPopupOpen, setIsRegisterPopupOpen] =
-    useState<boolean>(false);
-
-  const toggleLoginPopup = () => {
-    setIsLoginPopupOpen(!isLoginPopupOpen);
-  };
-
-  const toggleRegisterPopup = () => {
-    setIsRegisterPopupOpen(!isRegisterPopupOpen);
-  };
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   return (
     <>
-      {isRegisterPopupOpen && (
-        <RegisterPopup
-          onClose={toggleRegisterPopup}
-          toLogin={toggleLoginPopup}
-        />
-      )}
-      {isLoginPopupOpen && (
-        <LoginPopUp
-          onClose={toggleLoginPopup}
-          toRegister={toggleRegisterPopup}
-        />
-      )}
+      {!isLoggedIn && <Popup />}
       <ChatSection />
       <Sidebar />
     </>

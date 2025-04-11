@@ -1,7 +1,18 @@
 import './Sidebar.css';
+import UserInfo from './UserInfo';
 
 const Sidebar = () => {
-  return <div className="Sidebar"></div>;
+  return (
+    <div className="Sidebar">
+      <div className="sidebar-header">
+        <UserInfo />
+        <div>채팅방 만들기</div>
+      </div>
+      <div>
+        <div>채팅방 리스트</div>
+      </div>
+    </div>
+  );
 };
 
 export default Sidebar;

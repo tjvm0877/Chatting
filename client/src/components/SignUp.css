@@ -1,17 +1,4 @@
-.RegisterPopup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.Register {
+.SignUp {
   width: 30%;
   height: 25%;
   border-radius: 10px;
@@ -22,19 +9,24 @@
   justify-content: space-around;
 }
 
-.register-header {
+.sign-up-header {
   font-size: 2.5em;
   font-weight: bold;
 }
 
-.register-container {
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.sign-up-container {
   width: 80%;
   display: flex;
   flex-direction: column;
   gap: 0.3em;
 }
 
-.register-container > .input-wrapper {
+.sign-up-container > .input-wrapper {
   border-radius: 5px;
   border: none;
 }
@@ -45,11 +37,21 @@
   box-sizing: border-box;
 }
 
-.button-container > button {
-  background-color: #169976;
-}
-
 .button-container {
   display: flex;
+
   gap: 0.5em;
+}
+
+.button-container > button {
+  background-color: #169976;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1em;
+}
+
+button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
