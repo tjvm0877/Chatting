@@ -8,14 +8,14 @@ import {
   ListItemAvatar,
   ListItemText,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
 const SidebarArea = () => {
   return (
     <Grid container>
       {/* 회원 정보 */}
       <Grid size={12}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, padding: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, padding: 1 }}>
           <Avatar>U</Avatar>
           <Box>
             <Typography>your name</Typography>
@@ -26,7 +26,7 @@ const SidebarArea = () => {
 
       {/* 참여중인 채팅 리스트 */}
       <Grid size={12}>
-        <List sx={{ overflowY: 'auto', padding: 1 }}>
+        <List sx={{ overflowY: "auto", padding: 1 }}>
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
               <Avatar>N</Avatar>
@@ -34,6 +34,17 @@ const SidebarArea = () => {
             <ListItemText
               primary="Chat With N"
               secondary="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat."
+              slotProps={{
+                secondary: {
+                  sx: {
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  },
+                },
+              }}
             />
           </ListItem>
           <Divider variant="inset" component="li" />
