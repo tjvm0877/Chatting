@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { signIn } from '../api/auth';
+import useAuthStore from '../stores/authStore';
 
 const cardStyle = {
   display: 'flex',
@@ -45,6 +46,7 @@ const SignIn = () => {
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const setIsSignIn = useAuthStore((state) => state.setIsSignIn);
   const navigate = useNavigate();
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,8 +68,10 @@ const SignIn = () => {
     try {
       setIsLoading(true);
       await signIn(emailInput, passwordInput);
-      navigate('/');
+      setIsSignIn(true);
+      navigate('/chat');
     } catch (error) {
+      console.log(error);
       alert('로그인 실패');
     } finally {
       setIsLoading(false);

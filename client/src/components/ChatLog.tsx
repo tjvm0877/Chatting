@@ -1,6 +1,7 @@
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
-import { Message } from '../types/Message';
+import { Box } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import ChatMessage from './ChatMessage';
+import { Message } from '../types/Message';
 
 const messages: Message[] = [
   { type: 'received', content: 'Hello! How are you?', timestamp: '10:01 PM' },
@@ -47,52 +48,23 @@ const messages: Message[] = [
   { type: 'received', content: "I'm doing well too!", timestamp: '10:03 PM' },
 ];
 
-const ChatArea = () => {
+const ChatLog = () => {
   return (
-    <Grid container>
-      {/* 채팅 해더 */}
-      <Grid size={12}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, padding: 2 }}>
-          <Typography variant="h5">Hello, World!</Typography>
-        </Box>
-      </Grid>
-      {/* 채팅 로그 */}
-      <Grid size={12}>
-        <Box
-          sx={{
-            height: '80vh',
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            overflowY: 'auto',
-          }}
-        >
-          {messages.map((msg, index) => (
-            <ChatMessage key={index} {...msg} />
-          ))}
-        </Box>
-      </Grid>
-
-      {/* 채팅 입력 */}
-      <Grid size={12}>
-        <Box sx={{ display: 'flex' }}>
-          <TextField
-            fullWidth
-            multiline
-            rows={1}
-            maxRows={2}
-            placeholder="Type your message..."
-            variant="outlined"
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '4px',
-            }}
-          />
-          <Button variant="contained">Send</Button>
-        </Box>
-      </Grid>
-    </Grid>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+        backgroundColor: grey[100],
+        overflowY: 'auto',
+      }}
+    >
+      {messages.map((msg, index) => (
+        <ChatMessage key={index} {...msg} />
+      ))}
+    </Box>
   );
 };
 
-export default ChatArea;
+export default ChatLog;

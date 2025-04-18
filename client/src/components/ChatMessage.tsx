@@ -1,4 +1,4 @@
-import { blue, deepOrange, green, grey } from '@mui/material/colors';
+import { blue, deepOrange, grey } from '@mui/material/colors';
 import { Message } from '../types/Message';
 import { Avatar, Box, Typography } from '@mui/material';
 
@@ -12,8 +12,8 @@ const ChatMessage = ({ type, content, timestamp }: Message) => {
         };
       case 'received':
         return {
-          backgroundColor: green[500],
-          color: '#fff',
+          backgroundColor: grey[300],
+          color: '#000',
         };
       default:
         return {};
@@ -33,7 +33,9 @@ const ChatMessage = ({ type, content, timestamp }: Message) => {
       }}
     >
       {type === 'received' && (
-        <Avatar sx={{ bgcolor: deepOrange[500], width: '2em', height: '2em' }}>
+        <Avatar
+          sx={{ bgcolor: deepOrange[500], width: '1.5em', height: '1.5em' }}
+        >
           H
         </Avatar>
       )}

@@ -7,8 +7,6 @@ export const signIn = async (email: string, password: string) => {
       password,
     });
     const accessToken = response.data.accessToken;
-
-    // 로컬스토리지에 토큰 저장
     localStorage.setItem('accessToken', accessToken);
     console.log('SignIn successful:', accessToken);
   } catch (error) {

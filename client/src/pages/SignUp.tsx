@@ -76,6 +76,7 @@ const SignUp = () => {
       await signUp(emailInput, nameInput, passwordInput);
       navigate('/sign-in');
     } catch (error) {
+      console.log(error);
       alert('회원가입 실패');
     } finally {
       setIsLoading(false);
