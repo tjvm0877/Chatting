@@ -92,7 +92,7 @@ public class CustomMessageBroker implements MessageBroker {
 				try {
 
 					sessions.get(subscriberId).getSession().sendMessage(new TextMessage(
-						objectMapper.writeValueAsString(new MessageDto(topic, memberName, message))
+						objectMapper.writeValueAsString(new MessageDto(MessageType.MESSAGE, topic, memberName, message))
 					));
 				} catch (IOException e) {
 					e.printStackTrace(); // TODO: 예외 처리 변경
