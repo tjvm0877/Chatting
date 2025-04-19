@@ -54,4 +54,9 @@ public class MemberService {
 			.orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 		return MemberResponse.of(member);
 	}
+
+	public List<MemberResponse> getMemberList() {
+		return memberRepository.findAll().stream()
+			.map(MemberResponse::of).toList();
+	}
 }

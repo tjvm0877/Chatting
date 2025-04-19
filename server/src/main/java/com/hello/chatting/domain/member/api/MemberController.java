@@ -46,4 +46,11 @@ public class MemberController {
 		MemberResponse response = memberService.getMemberInfo(memberId);
 		return ResponseEntity.ok(response);
 	}
+
+	@GetMapping("/find")
+	@LoginRequired
+	public ResponseEntity<?> getMemberList() {
+		List<MemberResponse> response = memberService.getMemberList();
+		return ResponseEntity.ok(response);
+	}
 }
