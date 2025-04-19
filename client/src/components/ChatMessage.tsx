@@ -1,16 +1,21 @@
 import { blue, deepOrange, grey } from '@mui/material/colors';
-import { Message } from '../types/Message';
 import { Avatar, Box, Typography } from '@mui/material';
 
-const ChatMessage = ({ type, content, timestamp }: Message) => {
+interface ChatMessageProps {
+  type: 'SENT' | 'RECEIVED';
+  content: string;
+  timestamp: string;
+}
+
+const ChatMessage = ({ type, content, timestamp }: ChatMessageProps) => {
   const getMessageStyles = () => {
     switch (type) {
-      case 'sent':
+      case 'SENT':
         return {
           backgroundColor: blue[500],
           color: '#fff',
         };
-      case 'received':
+      case 'RECEIVED':
         return {
           backgroundColor: grey[300],
           color: '#000',
@@ -28,11 +33,11 @@ const ChatMessage = ({ type, content, timestamp }: Message) => {
         gap: 1,
         padding: 1,
         maxWidth: '80%',
-        alignSelf: type === 'sent' ? 'flex-end' : 'flex-start',
-        flexDirection: type === 'sent' ? 'row-reverse' : 'row',
+        alignSelf: type === 'SENT' ? 'flex-end' : 'flex-start',
+        flexDirection: type === 'SENT' ? 'row-reverse' : 'row',
       }}
     >
-      {type === 'received' && (
+      {type === 'RECEIVED' && (
         <Avatar
           sx={{ bgcolor: deepOrange[500], width: '1.5em', height: '1.5em' }}
         >

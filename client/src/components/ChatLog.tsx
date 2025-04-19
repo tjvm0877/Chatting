@@ -1,54 +1,34 @@
 import { Box } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import ChatMessage from './ChatMessage';
-import { Message } from '../types/Message';
-
-const messages: Message[] = [
-  { type: 'received', content: 'Hello! How are you?', timestamp: '10:01 PM' },
-  {
-    type: 'sent',
-    content: "I'm good, thank you! And you?",
-    timestamp: '10:02 PM',
-  },
-  { type: 'received', content: "I'm doing well too!", timestamp: '10:03 PM' },
-  { type: 'received', content: 'Hello! How are you?', timestamp: '10:01 PM' },
-  {
-    type: 'sent',
-    content: "I'm good, thank you! And you?",
-    timestamp: '10:02 PM',
-  },
-  { type: 'received', content: "I'm doing well too!", timestamp: '10:03 PM' },
-  { type: 'received', content: 'Hello! How are you?', timestamp: '10:01 PM' },
-  {
-    type: 'sent',
-    content: "I'm good, thank you! And you?",
-    timestamp: '10:02 PM',
-  },
-  { type: 'received', content: "I'm doing well too!", timestamp: '10:03 PM' },
-  { type: 'received', content: 'Hello! How are you?', timestamp: '10:01 PM' },
-  {
-    type: 'sent',
-    content: "I'm good, thank you! And you?",
-    timestamp: '10:02 PM',
-  },
-  { type: 'received', content: "I'm doing well too!", timestamp: '10:03 PM' },
-  { type: 'received', content: 'Hello! How are you?', timestamp: '10:01 PM' },
-  {
-    type: 'sent',
-    content: "I'm good, thank you! And you?",
-    timestamp: '10:02 PM',
-  },
-  { type: 'received', content: "I'm doing well too!", timestamp: '10:03 PM' },
-  { type: 'received', content: 'Hello! How are you?', timestamp: '10:01 PM' },
-  {
-    type: 'sent',
-    content: "I'm good, thank you! And you?",
-    timestamp: '10:02 PM',
-  },
-  { type: 'received', content: "I'm doing well too!", timestamp: '10:03 PM' },
-];
+import { useEffect } from 'react';
+import webSocketClient from '../api/websocket';
+import useChatStore from '../stores/chatStore';
+import { useUserStore } from '../stores/userStore';
 
 const ChatLog = () => {
+  const chatId = useChatStore((state) => state.chatId);
+  const user = useUserStore((state) => state.user);
+  const messages = useChatStore((state) => state.messages);
+  const setMessages = useChatStore((state) => state.setMessages);
+  const clearChatMessages = useChatStore((state) => state.clearChatMessages);
+
+  useEffect(() => {
+    if (!chatId) {
+      return;
+    }
+
+    const unsubscribe = webSocketClient.subscribe(chatId, (msg) => {
+      // if (msg.sender === user?.username) return;
+      setMessages(msg);
+    });
+
+    return () => {
+      unsubscribe();
+      clearChatMessages();
+    };
+  }, [chatId, setMessages, clearChatMessages, user?.username]);
+
   return (
     <Box
       sx={{
@@ -61,7 +41,12 @@ const ChatLog = () => {
       }}
     >
       {messages.map((msg, index) => (
-        <ChatMessage key={index} {...msg} />
+        <ChatMessage
+          key={index}
+          type={msg.sender === user?.username ? 'SENT' : 'RECEIVED'}
+          content={msg.content}
+          timestamp={'10:10'}
+        />
       ))}
     </Box>
   );

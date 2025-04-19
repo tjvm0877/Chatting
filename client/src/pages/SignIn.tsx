@@ -11,8 +11,9 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { signIn } from '../api/auth';
+import { signIn } from '../api/members';
 import useAuthStore from '../stores/authStore';
+import webSocketClient from '../api/websocket';
 
 const cardStyle = {
   display: 'flex',
@@ -67,7 +68,8 @@ const SignIn = () => {
 
     try {
       setIsLoading(true);
-      await signIn(emailInput, passwordInput);
+      const accessToken = await signIn(emailInput, passwordInput);
+      webSocketClient.connect(accessToken);
       setIsSignIn(true);
       navigate('/chat');
     } catch (error) {

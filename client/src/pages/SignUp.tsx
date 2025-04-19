@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { signUp } from '../api/auth';
+import { signUp } from '../api/members';
 
 const cardStyle = {
   display: 'flex',

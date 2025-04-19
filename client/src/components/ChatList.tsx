@@ -7,121 +7,68 @@ import {
   ListItemButton,
   ListItemText,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getChatList } from '../api/chat';
+import useChatStore from '../stores/chatStore';
 
-const mockChatList = [
-  {
-    avatar: 'B',
-    name: 'Button',
-    message: '안녕하세요?',
-  },
-  {
-    avatar: 'C',
-    name: 'Caddy',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'D',
-    name: 'Devleop',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'E',
-    name: 'Ether Net',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'D',
-    name: 'Devleop',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'E',
-    name: 'Ether Net',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'D',
-    name: 'Devleop',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'E',
-    name: 'Ether Net',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'D',
-    name: 'Devleop',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'E',
-    name: 'Ether Net',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'D',
-    name: 'Devleop',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'E',
-    name: 'Ether Net',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'D',
-    name: 'Devleop',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-  {
-    avatar: 'E',
-    name: 'Ether Net',
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a purus congue mauris tincidunt porttitor at auctor sapien. Cras venenatis massa id dui convallis elementum id eget erat.',
-  },
-];
+interface chatInfo {
+  chatId: number;
+  chatName: string;
+}
 
-const ChatList = () => {
-  const selectedId = 1;
+interface ChatListProps {
+  isModalOpen: boolean;
+}
+
+const ChatList = ({ isModalOpen }: ChatListProps) => {
+  const setChat = useChatStore((state) => state.setChatId);
+  const setChatName = useChatStore((state) => state.setName);
+  const [chatList, setChatList] = useState<chatInfo[]>([]);
+
+  useEffect(() => {
+    const fetchChatList = async () => {
+      try {
+        const data = await getChatList();
+        const chats: chatInfo[] = data.map((item: any) => ({
+          chatId: item.id,
+          chatName: item.name,
+          avatar: item.name?.charAt(0) || '?',
+          lastMessage: item.lastMessage || '', // lastMessage가 있으면
+        }));
+        setChatList(chats);
+      } catch (error) {
+        console.error('채팅 리스트를 불러오지 못했습니다:', error);
+      }
+    };
+    fetchChatList();
+  }, [isModalOpen]);
+
+  const handleSelectChat = (selectedChat: chatInfo) => {
+    setChat(selectedChat.chatId);
+    setChatName(selectedChat.chatName);
+  };
+
   return (
     <List
       sx={{ height: '100%', overflowY: 'auto' }}
       role="list"
       aria-label="chat list"
     >
-      {mockChatList.map((item, index) => (
-        <React.Fragment key={index}>
+      {chatList.map((item, index) => (
+        <React.Fragment key={item.chatId}>
           <ListItem alignItems="flex-start">
             <ListItemButton
-              selected={selectedId === index}
-              // onClick={() => onSelect(item.id)}
+              onClick={() => handleSelectChat(item)}
               sx={{
-                alignItems: 'flex-start',
-                backgroundColor:
-                  selectedId === index ? 'action.selected' : 'inherit',
                 '&:hover': { backgroundColor: 'action.hover' },
               }}
             >
               <ListItemAvatar>
-                <Avatar>{item.avatar}</Avatar>
+                <Avatar>{item.chatName.charAt(0)}</Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={item.name}
-                secondary={item.message}
+                primary={item.chatName}
+                secondary={'최근 메시지...'}
                 slotProps={{
                   secondary: {
                     sx: {
@@ -136,7 +83,7 @@ const ChatList = () => {
               />
             </ListItemButton>
           </ListItem>
-          {index < mockChatList.length - 1 && <Divider component="li" />}
+          {index < chatList.length - 1 && <Divider component="li" />}
         </React.Fragment>
       ))}
     </List>
