@@ -42,5 +42,4 @@ public class ChatController {
 		List<ChatInfo> response = chatManageService.getJoinedChat(memberPublicId);
 		return ResponseEntity.ok(response);
 	}
-
 }

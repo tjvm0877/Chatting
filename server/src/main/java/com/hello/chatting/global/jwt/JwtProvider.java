@@ -60,7 +60,8 @@ public class JwtProvider {
 	}
 
 	public UUID getMemberUuidFromToken(String token) {
-		return parseClaims(token).get("uuid", UUID.class);
+		String stringUuid = parseClaims(token).get("uuid", String.class);
+		return UUID.fromString(stringUuid);
 	}
 
 	private Claims parseClaims(String token) {
