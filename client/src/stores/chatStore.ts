@@ -1,13 +1,13 @@
 import { create } from 'zustand';
-import { ChatMessage } from '../types/Message';
+import { ReceiveMessage } from '../types/Message';
 
 interface chatState {
-  chatId: number | null;
+  chatId: string | null;
   name: string;
-  messages: ChatMessage[];
-  setChatId: (value: number) => void;
+  messages: ReceiveMessage[];
+  setChatId: (value: string) => void;
   setName: (value: string) => void;
-  setMessages: (message: ChatMessage) => void;
+  setMessages: (message: ReceiveMessage) => void;
   clearChatMessages: () => void;
 }
 
@@ -15,9 +15,9 @@ const useChatStore = create<chatState>((set) => ({
   chatId: null,
   name: '',
   messages: [],
-  setChatId: (value: number) => set({ chatId: value }),
+  setChatId: (value: string) => set({ chatId: value }),
   setName: (value: string) => set({ name: value }),
-  setMessages: (message: ChatMessage) =>
+  setMessages: (message: ReceiveMessage) =>
     set((state) => ({
       messages: [...state.messages, message],
     })),

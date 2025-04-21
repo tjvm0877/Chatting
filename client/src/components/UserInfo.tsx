@@ -1,25 +1,27 @@
-import { AddBox } from '@mui/icons-material';
 import { Avatar, Box, IconButton, Typography } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import { useEffect } from 'react';
-import { useUserStore } from '../stores/userStore';
-import { User } from '../types/User';
+import { useMemberStore } from '../stores/userStore';
+import { Member } from '../types/Member';
 import { getUserInfo } from '../api/members';
+import { Logout } from '@mui/icons-material';
+import { useNavigate } from 'react-router';
+import webSocketClient from '../api/websocket';
+import useAuthStore from '../stores/authStore';
 
-interface UserInfoProps {
-  onModalOpen: () => void;
-}
-
-const UserInfo = ({ onModalOpen }: UserInfoProps) => {
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
+const UserInfo = () => {
+  const user = useMemberStore((state) => state.member);
+  const setUser = useMemberStore((state) => state.setMember);
+  const setIsSignIn = useAuthStore((state) => state.setIsSignIn);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const data = await getUserInfo();
-        const user: User = {
-          username: data.name,
+        const user: Member = {
+          uuid: data.uuid,
+          name: data.name,
           email: data.email,
           avatarUrl: data.name.charAt(0) || '?',
         };
@@ -28,9 +30,15 @@ const UserInfo = ({ onModalOpen }: UserInfoProps) => {
         console.error('유저 정보를 불러오지 못했습니다:', error);
       }
     };
-
     fetchUser();
   }, [setUser]);
+
+  const handleLogout = () => {
+    webSocketClient.disconnect();
+    localStorage.clear();
+    setIsSignIn(false);
+    navigate('/sign-in');
+  };
 
   return (
     <Box
@@ -46,14 +54,14 @@ const UserInfo = ({ onModalOpen }: UserInfoProps) => {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <Avatar>{user?.avatarUrl}</Avatar>
         <Box>
-          <Typography fontWeight="bold">{user?.username}</Typography>
+          <Typography fontWeight="bold">{user?.name}</Typography>
           <Typography variant="caption" color="text.secondary">
             {user?.email}
           </Typography>
         </Box>
       </Box>
-      <IconButton onClick={onModalOpen}>
-        <AddBox />
+      <IconButton onClick={handleLogout}>
+        <Logout />
       </IconButton>
     </Box>
   );

@@ -10,10 +10,10 @@ export const getChatList = async () => {
   }
 };
 
-export const requestCreateCaht = async (recipient: string) => {
+export const requestCreateChat = async (recipient: string) => {
   try {
     await axiosInstance.post('/chat', {
-      recipientName: recipient,
+      recipient: recipient,
     });
   } catch (error) {
     console.error('Create chat failed:', error);

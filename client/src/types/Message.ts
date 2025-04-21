@@ -1,24 +1,33 @@
-export enum CommandType {
-  PUBLISH = 'PUBLISH',
-  AUTH = 'AUTH',
-  SUBSCRIBE = 'SUBSCRIBE',
-  UNSUBSCRIBE = 'UNSUBSCRIBE',
-}
+export const CLIENT_COMMAND = {
+  CONNECT: 'CONNECT',
+  SEND: 'SEND',
+  SUBSCRIBE: 'SUBSCRIBE',
+  UNSUBSCRIBE: 'UNSUBSCRIBE',
+} as const;
+export type ClientCommand =
+  (typeof CLIENT_COMMAND)[keyof typeof CLIENT_COMMAND]; // 'PUBLISH' | 'AUTH' | 'SUBSCRIBE' | 'UNSUBSCRIBE'
 
-export enum MessageType {
-  MESSAGE = 'MESSAGE',
-  NOTIFICATION = 'NOTIFICATION',
-}
+export const SERVER_COMMAND = {
+  MESSAGE: 'MESSAGE',
+  CONNECTED: 'CONNECTED',
+  ERROR: 'ERROR',
+} as const;
+export type ServerCommand =
+  (typeof SERVER_COMMAND)[keyof typeof SERVER_COMMAND]; // 'MESSAGE' | 'NOTIFICATION'
 
-export interface CommandMessage {
-  type: CommandType;
-  destination?: number;
-  body: string;
-}
-
-export interface ChatMessage {
-  type: MessageType;
-  topic: number;
+// Client -> Server
+export interface SentMessage {
+  command: ClientCommand;
+  destination: string;
   sender: string;
   content: string;
+}
+
+// Server -> Client
+export interface ReceiveMessage {
+  command: ServerCommand;
+  destination: string;
+  sender: string;
+  content: string;
+  timeStamp: string;
 }

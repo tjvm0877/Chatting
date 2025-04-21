@@ -15,10 +15,11 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getUserList } from '../api/members';
-import { useUserStore } from '../stores/userStore';
-import { requestCreateCaht } from '../api/chat';
+import { useMemberStore } from '../stores/userStore';
+import { requestCreateChat } from '../api/chat';
 
 interface memberInfo {
+  uuid: string;
   avatar: string;
   name: string;
   email: string;
@@ -31,7 +32,7 @@ interface CreateChatProps {
 
 const CreateChat = ({ isModalOpen, onClose }: CreateChatProps) => {
   const [members, setMembers] = useState<memberInfo[]>([]);
-  const user = useUserStore((state) => state.user);
+  const user = useMemberStore((state) => state.member);
 
   useEffect(() => {
     if (!isModalOpen) {
@@ -42,8 +43,9 @@ const CreateChat = ({ isModalOpen, onClose }: CreateChatProps) => {
       const data = await getUserList();
 
       const members: memberInfo[] = data
-        .filter((item: any) => item.name !== user?.username)
+        .filter((item: any) => item.name !== user?.name)
         .map((item: any) => ({
+          uuid: item.uuid,
           avatar: item.name.charAt(0),
           name: item.name,
           email: item.email,
@@ -53,12 +55,11 @@ const CreateChat = ({ isModalOpen, onClose }: CreateChatProps) => {
     };
 
     fetchUserInfo();
-  }, [isModalOpen, user?.username]);
+  }, [isModalOpen, user?.name]);
 
   const handleCreateChat = async (selectedMember: memberInfo) => {
     try {
-      // 클릭된 ListItemButton의 ListItemText 가져오기
-      requestCreateCaht(selectedMember.name);
+      requestCreateChat(selectedMember.uuid);
       onClose();
     } catch (error) {
       console.log(error);

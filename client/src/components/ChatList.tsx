@@ -11,9 +11,15 @@ import React, { useEffect, useState } from 'react';
 import { getChatList } from '../api/chat';
 import useChatStore from '../stores/chatStore';
 
-interface chatInfo {
-  chatId: number;
+interface ChatInfo {
+  chatId: string;
   chatName: string;
+  chatMembers: ChatMember[];
+}
+
+interface ChatMember {
+  name: string;
+  uuid: string;
 }
 
 interface ChatListProps {
@@ -23,17 +29,19 @@ interface ChatListProps {
 const ChatList = ({ isModalOpen }: ChatListProps) => {
   const setChat = useChatStore((state) => state.setChatId);
   const setChatName = useChatStore((state) => state.setName);
-  const [chatList, setChatList] = useState<chatInfo[]>([]);
+  const [chatList, setChatList] = useState<ChatInfo[]>([]);
 
   useEffect(() => {
     const fetchChatList = async () => {
       try {
         const data = await getChatList();
-        const chats: chatInfo[] = data.map((item: any) => ({
-          chatId: item.id,
+        const chats: ChatInfo[] = data.map((item: any) => ({
+          chatId: item.uuid,
           chatName: item.name,
-          avatar: item.name?.charAt(0) || '?',
-          lastMessage: item.lastMessage || '', // lastMessage가 있으면
+          chatMembers: item.chatMembers.map((item: any) => ({
+            name: item.name,
+            uuid: item.uuid,
+          })),
         }));
         setChatList(chats);
       } catch (error) {
@@ -43,7 +51,7 @@ const ChatList = ({ isModalOpen }: ChatListProps) => {
     fetchChatList();
   }, [isModalOpen]);
 
-  const handleSelectChat = (selectedChat: chatInfo) => {
+  const handleSelectChat = (selectedChat: ChatInfo) => {
     setChat(selectedChat.chatId);
     setChatName(selectedChat.chatName);
   };

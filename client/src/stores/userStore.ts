@@ -1,14 +1,14 @@
 import { create } from 'zustand';
-import { User } from '../types/User';
+import { Member as Member } from '../types/Member';
 
-interface UserState {
-  user: User | null;
-  setUser: (user: User | null) => void;
+interface MemberState {
+  member: Member | null;
+  setMember: (user: Member | null) => void;
   clearUser: () => void;
 }
 
-export const useUserStore = create<UserState>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: null }),
+export const useMemberStore = create<MemberState>((set) => ({
+  member: null,
+  setMember: (member) => set({ member: member }),
+  clearUser: () => set({ member: null }),
 }));

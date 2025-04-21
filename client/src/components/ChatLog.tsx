@@ -4,30 +4,32 @@ import ChatMessage from './ChatMessage';
 import { useEffect } from 'react';
 import webSocketClient from '../api/websocket';
 import useChatStore from '../stores/chatStore';
-import { useUserStore } from '../stores/userStore';
+import { useMemberStore } from '../stores/userStore';
 
 const ChatLog = () => {
   const chatId = useChatStore((state) => state.chatId);
-  const user = useUserStore((state) => state.user);
+  const member = useMemberStore((state) => state.member);
   const messages = useChatStore((state) => state.messages);
   const setMessages = useChatStore((state) => state.setMessages);
   const clearChatMessages = useChatStore((state) => state.clearChatMessages);
 
   useEffect(() => {
-    if (!chatId) {
+    if (!chatId || !member) {
       return;
     }
-
-    const unsubscribe = webSocketClient.subscribe(chatId, (msg) => {
-      // if (msg.sender === user?.username) return;
-      setMessages(msg);
-    });
+    const unsubscribe = webSocketClient.subscribe(
+      chatId,
+      member.uuid,
+      (msg) => {
+        setMessages(msg);
+      }
+    );
 
     return () => {
       unsubscribe();
       clearChatMessages();
     };
-  }, [chatId, setMessages, clearChatMessages, user?.username]);
+  }, [chatId]);
 
   return (
     <Box
@@ -43,7 +45,7 @@ const ChatLog = () => {
       {messages.map((msg, index) => (
         <ChatMessage
           key={index}
-          type={msg.sender === user?.username ? 'SENT' : 'RECEIVED'}
+          type={msg.sender === member?.uuid ? 'SENT' : 'RECEIVED'}
           content={msg.content}
           timestamp={'10:10'}
         />

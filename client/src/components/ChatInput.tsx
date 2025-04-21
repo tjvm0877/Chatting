@@ -3,21 +3,28 @@ import { Box, Button, TextField } from '@mui/material';
 import useCurrentChatStore from '../stores/chatStore';
 import { useState } from 'react';
 import webSocketClient from '../api/websocket';
-import { CommandType } from '../types/Message';
+import { CLIENT_COMMAND } from '../types/Message';
+import { useMemberStore } from '../stores/userStore';
 
 const ChatInput = () => {
   const [messageInput, setMessageInput] = useState<string>('');
   const chatId = useCurrentChatStore((state) => state.chatId);
+  const member = useMemberStore((state) => state.member);
 
   const onMessageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageInput(e.target.value);
   };
 
   const handleSendMessage = () => {
-    if (!chatId) {
+    if (!chatId || !member) {
       return;
     }
-    webSocketClient.sendMessage(CommandType.PUBLISH, messageInput, chatId);
+    webSocketClient.sendMessage(
+      CLIENT_COMMAND.SEND,
+      messageInput,
+      member.uuid,
+      chatId
+    );
   };
 
   return (
