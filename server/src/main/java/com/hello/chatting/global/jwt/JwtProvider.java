@@ -1,6 +1,7 @@
 package com.hello.chatting.global.jwt;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
@@ -34,16 +35,13 @@ public class JwtProvider {
 		this.ACCESS_TOKEN_EXPIRATION_TIME = EXPIRATION_TIME;
 	}
 
-	public String generateAccessToken(Long memberId, String memberName) {
-		String token = Jwts.builder()
-			.claim("member", memberId)
-			.claim("name", memberName)
+	public String generateAccessToken(String uuid) {
+		return Jwts.builder()
+			.claim("uuid", uuid)
 			.issuedAt(new Date(System.currentTimeMillis()))
 			.expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
 			.signWith(secretKey)
 			.compact();
-
-		return token;
 	}
 
 	public boolean isValidToken(String token) {
@@ -61,12 +59,8 @@ public class JwtProvider {
 		}
 	}
 
-	public Long getMemberIdFromToken(String token) {
-		return parseClaims(token).get("member", Long.class);
-	}
-
-	public String getMemberNameFromToken(String token) {
-		return parseClaims(token).get("name", String.class);
+	public UUID getMemberUuidFromToken(String token) {
+		return parseClaims(token).get("uuid", UUID.class);
 	}
 
 	private Claims parseClaims(String token) {
@@ -82,7 +76,6 @@ public class JwtProvider {
 		if (!token.startsWith(BEARER_PREFIX)) {
 			throw new IllegalArgumentException("Invalid Bearer prefix in token");
 		}
-
 		return token.substring(BEARER_PREFIX.length());
 	}
 }

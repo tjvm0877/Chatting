@@ -1,5 +1,8 @@
 package com.hello.chatting.domain.chat.domain;
 
+import java.util.UUID;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,9 +20,14 @@ public class Chat {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "uuid", nullable = false, unique = true)
+	private UUID uuid;
+
+	@Column(name = "name")
 	private String name;
 
 	public Chat(String name) {
 		this.name = name;
+		this.uuid = UUID.randomUUID();
 	}
 }

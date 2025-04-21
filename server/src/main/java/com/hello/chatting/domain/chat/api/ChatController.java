@@ -1,6 +1,7 @@
 package com.hello.chatting.domain.chat.api;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,21 +29,18 @@ public class ChatController {
 	@PostMapping
 	@LoginRequired
 	public ResponseEntity<?> createChat(
-		@CurrentUser Long memberId,
-		@RequestBody @Valid CreateChatRequest request) {
+		@CurrentUser UUID memberPublicId,
+		@RequestBody CreateChatRequest request) {
 
-		chatManageService.createChat(memberId, request);
+		chatManageService.createChat(memberPublicId, request);
 		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping
 	@LoginRequired
-	public ResponseEntity<?> getChatList(@CurrentUser Long memberId) {
-		List<ChatInfo> response = chatManageService.getJoinedChat(memberId);
+	public ResponseEntity<?> getChatList(@CurrentUser UUID memberPublicId) {
+		List<ChatInfo> response = chatManageService.getJoinedChat(memberPublicId);
 		return ResponseEntity.ok(response);
 	}
 
-	// 방 삭제
-
-	// 채팅 기록 불러오기 -> 페이징 붙이면 될 것 같은데?
 }

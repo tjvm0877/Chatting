@@ -2,8 +2,6 @@ package com.hello.chatting.global.aop;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -20,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthAspect {
 
-	private static final Logger log = LoggerFactory.getLogger(AuthAspect.class);
 	private final JwtProvider jwtProvider;
 
 	@Before("@annotation(com.hello.chatting.global.annotation.LoginRequired)")

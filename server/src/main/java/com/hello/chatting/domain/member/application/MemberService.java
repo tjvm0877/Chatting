@@ -1,6 +1,7 @@
 package com.hello.chatting.domain.member.application;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,16 +43,13 @@ public class MemberService {
 		if (!member.isValidPassword(request.password())) {
 			throw new BusinessException(ErrorCode.UNAUTHORIZED);
 		}
-		return new LoginResponse(jwtProvider.generateAccessToken(member.getId(), member.getName()));
+		return new LoginResponse(jwtProvider.generateAccessToken(member.getUuid().toString()));
 	}
 
-	public List<MemberResponse> findAllMembers() {
-		return memberRepository.findAll().stream().map((MemberResponse::of)).toList();
-	}
-
-	public MemberResponse getMemberInfo(Long memberId) {
-		Member member = memberRepository.findById(memberId)
+	public MemberResponse getMemberInfo(UUID memberPublicId) {
+		Member member = memberRepository.findByUuid(memberPublicId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+
 		return MemberResponse.of(member);
 	}
 

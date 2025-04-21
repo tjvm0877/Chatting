@@ -9,9 +9,8 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hello.chatting.domain.chat.application.ChatService;
 import com.hello.chatting.global.jwt.JwtProvider;
-import com.hello.chatting.global.websocket.CustomMessageBroker;
 import com.hello.chatting.global.websocket.CustomWebsocketHandler;
-import com.hello.chatting.global.websocket.MessageBroker;
+import com.hello.chatting.global.websocket.SessionManager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSocket
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
-
 	private final ObjectMapper objectMapper;
 	private final JwtProvider jwtProvider;
 	private final ChatService chatService;
@@ -32,11 +30,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 	@Bean
 	public CustomWebsocketHandler customWebsocketHandler() {
-		return new CustomWebsocketHandler(messageBroker(), objectMapper);
+		return new CustomWebsocketHandler(objectMapper, sessionManager(), chatService);
 	}
 
 	@Bean
-	public MessageBroker messageBroker() {
-		return new CustomMessageBroker(jwtProvider, chatService, objectMapper);
+	public SessionManager sessionManager() {
+		return new SessionManager(jwtProvider);
 	}
 }

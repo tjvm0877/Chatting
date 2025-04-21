@@ -1,5 +1,7 @@
 package com.hello.chatting.global.resolver;
 
+import java.util.UUID;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -28,7 +30,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 	}
 
 	@Override
-	public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+	public UUID resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
 		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
@@ -38,6 +40,6 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 			throw new BusinessException(ErrorCode.UNAUTHORIZED);
 		}
 
-		return jwtProvider.getMemberIdFromToken(token);
+		return jwtProvider.getMemberUuidFromToken(token);
 	}
 }

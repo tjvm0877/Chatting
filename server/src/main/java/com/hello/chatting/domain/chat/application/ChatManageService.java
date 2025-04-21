@@ -1,6 +1,7 @@
 package com.hello.chatting.domain.chat.application;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,24 +29,29 @@ public class ChatManageService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public void createChat(Long memberId, CreateChatRequest request) {
-		Member member = memberRepository.findById(memberId)
+	public void createChat(UUID memberPublicId, CreateChatRequest request) {
+		Member member = memberRepository.findByUuid(memberPublicId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
-		Member recipient = memberRepository.findByName(request.recipientName())
+		Member recipient = memberRepository.findByUuid(request.recipient())
 			.orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 
-		Chat chat = new Chat(member.getName() + "-" + recipient.getName());
+		// 자기 자신에게 채팅 금지
+		if (member.equals(recipient)) {
+			throw new BusinessException(ErrorCode.INVALID_CHAT_REQUEST);
+		}
+
+		Chat chat = new Chat(null);
 		chatRepository.save(chat);
 
 		ChatMember creatorChatMember = new ChatMember(chat, member);
 		ChatMember recipientChatMember = new ChatMember(chat, recipient);
-		chatMemberRepository.save(creatorChatMember);
-		chatMemberRepository.save(recipientChatMember);
+
+		chatMemberRepository.saveAll(List.of(creatorChatMember, recipientChatMember));
 	}
 
-	public List<ChatInfo> getJoinedChat(Long memberId) {
-		return chatMemberRepository.findByAllMemberId(memberId).stream()
+	public List<ChatInfo> getJoinedChat(UUID memberPublicId) {
+		return chatMemberRepository.findAllByMemberUuid(memberPublicId).stream()
 			.map(chatMember -> {
 				Chat chat = chatMember.getChat();
 				return new ChatInfo(chat.getId(), chat.getName());

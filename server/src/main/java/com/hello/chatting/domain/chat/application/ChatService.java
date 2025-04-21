@@ -1,5 +1,7 @@
 package com.hello.chatting.domain.chat.application;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,7 +9,6 @@ import com.hello.chatting.domain.chat.Repository.ChatMemberRepository;
 import com.hello.chatting.domain.chat.Repository.ChatRepository;
 import com.hello.chatting.domain.chat.Repository.MessageRepository;
 import com.hello.chatting.domain.chat.domain.Chat;
-import com.hello.chatting.domain.chat.domain.ChatMember;
 import com.hello.chatting.domain.chat.domain.Message;
 import com.hello.chatting.domain.member.domain.Member;
 import com.hello.chatting.domain.member.repository.MemberRepository;
@@ -26,16 +27,16 @@ public class ChatService {
 	private final ChatMemberRepository chatMemberRepository;
 	private final MessageRepository messageRepository;
 
-	public boolean isChatExist(Long chatId) {
-		return chatRepository.existsById(chatId);
+	public boolean isChatExist(UUID chatPublicId) {
+		return chatRepository.existsByUuid(chatPublicId);
 	}
 
-	public boolean isChatMember(Long chatId, Long memberId) {
-		return chatMemberRepository.isChatMemberExist(chatId, memberId);
+	public boolean isChatMember(UUID chatPublicID, UUID memberPublicId) {
+		return chatMemberRepository.isChatMemberExist(chatPublicID, memberPublicId);
 	}
 
 	@Transactional
-	public void saveMessageLog(Long chatId, Long memberId, String message) {
+	public void saveMessage(Long chatId, Long memberId, String message) {
 		Chat chat = chatRepository.findById(chatId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
 		Member member = memberRepository.findById(memberId)

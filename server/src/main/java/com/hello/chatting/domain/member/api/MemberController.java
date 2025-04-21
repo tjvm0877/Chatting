@@ -1,6 +1,7 @@
 package com.hello.chatting.domain.member.api;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,14 +37,14 @@ public class MemberController {
 	}
 
 	@PostMapping("/sign-in")
-	public ResponseEntity<?> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
+	public ResponseEntity<?> signIn(@RequestBody @Valid SignInRequest request) {
 		return ResponseEntity.ok(memberService.signIn(request));
 	}
 
 	@GetMapping
 	@LoginRequired
-	public ResponseEntity<?> getInfo(@CurrentUser Long memberId) {
-		MemberResponse response = memberService.getMemberInfo(memberId);
+	public ResponseEntity<?> getInfo(@CurrentUser UUID memberPublicId) {
+		MemberResponse response = memberService.getMemberInfo(memberPublicId);
 		return ResponseEntity.ok(response);
 	}
 

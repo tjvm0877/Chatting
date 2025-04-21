@@ -1,6 +1,7 @@
 package com.hello.chatting.domain.member.repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,4 +14,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByEmail(String email);
 
 	Optional<Member> findByName(String name);
+
+	Optional<Member> findByUuid(UUID uuid);
 }
