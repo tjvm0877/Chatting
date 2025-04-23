@@ -1,7 +1,7 @@
-package com.hello.chatting.domain.chat.Repository;
+package com.hello.chatting.domain.chat.repository;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,14 +12,15 @@ import com.hello.chatting.domain.chat.domain.ChatMember;
 
 public interface ChatMemberRepository extends JpaRepository<ChatMember, Long> {
 
-	@Query("SELECT COUNT(cm) > 0 FROM ChatMember cm WHERE cm.chat.uuid = :chatId AND cm.member.uuid = :memberPublicId")
-	boolean isChatMemberExist(@Param("chatId") UUID chatId, @Param("memberPublicId") UUID memberPublicId);
+	@Query("SELECT cm FROM ChatMember cm JOIN FETCH cm.chat c JOIN FETCH cm.member WHERE cm.member.uuid = :memberUuid")
+	List<ChatMember> findAllWithChatAndMembersByMemberUuid(@Param("memberPublicId") UUID memberPublicId);
 
-	@Query("SELECT cm FROM ChatMember cm JOIN FETCH cm.chat WHERE cm.member.uuid = :uuid")
-	List<ChatMember> findAllByMemberUuid(@Param("uuid") UUID uuid);
+	@Query("SELECT cm FROM ChatMember cm JOIN FETCH cm.member  WHERE cm.chat.id = :chatId")
+	List<ChatMember> findAllByChat(@Param("chatId") Long chatId);
 
-	@Query("SELECT cm FROM ChatMember cm JOIN FETCH cm.member WHERE cm.chat.id = :chatId")
-	List<ChatMember> findAllChatMember(@Param("chatId") Long chatId);
+	@Query("SELECT (COUNT(cm) > 0) FROM ChatMember cm WHERE cm.chat.uuid = :chatId AND cm.member.uuid = :memberId")
+	boolean existsByChatUuidAndMemberUuid(@Param("chatId") UUID chatId, @Param("memberId") UUID memberId);
 
-	List<ChatMember> findAllByChatIdIn(List<Long> chatIds);
+	@Query("SELECT cm FROM ChatMember cm JOIN FETCH cm.chat WHERE cm.chat.uuid = :chatId AND cm.member.uuid = :memberId")
+	Optional<ChatMember> findByChatUuidAndMemberUuid(@Param("chatId") UUID chatId, @Param("memberId") UUID memberId);
 }

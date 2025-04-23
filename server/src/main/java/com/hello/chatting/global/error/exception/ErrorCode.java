@@ -1,4 +1,4 @@
-package com.hello.chatting.global.error;
+package com.hello.chatting.global.error.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -14,14 +14,13 @@ public enum ErrorCode {
 	INTERNAL_SERVER_ERROR(500, "Server Error"),
 	INVALID_TYPE_VALUE(400, "Invalid Type Value"),
 	UNAUTHORIZED(401, "Unauthorized"),
+	HANDLE_ACCESS_DENIED(403, "Access is Denied"),
 
 	// Member
 	EMAIL_DUPLICATE(400, "Email Duplication"),
 
 	// Chat
-	INVALID_CHAT_REQUEST(400, "Invalid Chat Request"),
-	CHAT_ALREADY_EXISTS(400, "Chat already exists");
-	
+	CREATE_CHAT_FAILED(400, "create chat failed");
 	private final int status;
 	private final String message;
 

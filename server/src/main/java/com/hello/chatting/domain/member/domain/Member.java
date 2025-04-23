@@ -13,18 +13,17 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "members")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@EqualsAndHashCode(of = {"id"})
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(of = {"id"})
 public class Member {
 
 	@Id
@@ -45,20 +44,17 @@ public class Member {
 
 	@CreatedDate
 	@Column(name = "created_at", updatable = false, nullable = false)
-	private Instant createdAt;
+	private Instant createAt;
 
 	@LastModifiedDate
-	@Column(name = "update_at", nullable = false)
-	private Instant updateAt;
+	@Column(name = "updated_at", nullable = false)
+	private Instant updatedAt;
 
+	@Builder
 	public Member(String email, String name, String password) {
-		this.email = email;
 		this.uuid = UUID.randomUUID();
+		this.email = email;
 		this.name = name;
 		this.password = password;
-	}
-
-	public boolean isValidPassword(String password) {
-		return this.password.equals(password);
 	}
 }

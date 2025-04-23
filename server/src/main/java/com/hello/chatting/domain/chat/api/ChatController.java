@@ -5,41 +5,51 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hello.chatting.domain.chat.application.ChatManageService;
-import com.hello.chatting.domain.chat.dto.ChatInfo;
-import com.hello.chatting.domain.chat.dto.CreateChatRequest;
-import com.hello.chatting.global.annotation.CurrentUser;
-import com.hello.chatting.global.annotation.LoginRequired;
+import com.hello.chatting.domain.chat.application.ChatManagementService;
+import com.hello.chatting.domain.chat.application.ChatSearchService;
+import com.hello.chatting.domain.chat.dto.ChatCreateResponse;
+import com.hello.chatting.domain.chat.dto.ChatLog;
+import com.hello.chatting.domain.chat.dto.ChatResponse;
+import com.hello.chatting.global.annotation.CurrentMember;
+import com.hello.chatting.global.annotation.SignInRequired;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/chats")
 @RequiredArgsConstructor
 public class ChatController {
 
-	private final ChatManageService chatManageService;
+	private final ChatManagementService chatManagementService;
+	private final ChatSearchService chatSearchService;
 
-	@PostMapping
-	@LoginRequired
-	public ResponseEntity<?> createChat(
-		@CurrentUser UUID memberPublicId,
-		@RequestBody CreateChatRequest request) {
-
-		chatManageService.createChat(memberPublicId, request);
-		return ResponseEntity.ok().build();
+	@GetMapping("/new")
+	@SignInRequired
+	public ResponseEntity<?> createNewChat(@CurrentMember UUID memberPublicId,
+		@RequestParam("recipient") UUID recipient) {
+		ChatCreateResponse response = chatManagementService.create(memberPublicId, recipient);
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping
-	@LoginRequired
-	public ResponseEntity<?> getChatList(@CurrentUser UUID memberPublicId) {
-		List<ChatInfo> response = chatManageService.getJoinedChat(memberPublicId);
+	@SignInRequired
+	public ResponseEntity<?> getChatList(@CurrentMember UUID memberPublicId) {
+		List<ChatResponse> response = chatSearchService.getJoinedChat(memberPublicId);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/logs")
+	@SignInRequired
+	public ResponseEntity<?> getChatLogs(
+		@RequestParam(value = "chat") UUID chatPublicId,
+		@RequestParam(value = "lastChatId", required = false) Long lastChatId,
+		@RequestParam(value = "size", required = false, defaultValue = "10") int size
+	) {
+		List<ChatLog> response = chatSearchService.getChatLogs(chatPublicId, lastChatId, size);
 		return ResponseEntity.ok(response);
 	}
 }

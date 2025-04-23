@@ -1,6 +1,6 @@
 package com.hello.chatting.domain.member.dto;
 
-public record LoginResponse(
+public record SignInResponse(
 	String accessToken
 ) {
 }

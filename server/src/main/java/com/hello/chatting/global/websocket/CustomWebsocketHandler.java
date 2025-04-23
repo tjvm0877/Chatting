@@ -20,7 +20,6 @@ public class CustomWebsocketHandler extends TextWebSocketHandler {
 
 	private final ObjectMapper objectMapper;
 	private final SessionManager sessionManager;
-
 	private final ChatService chatService;
 
 	@Override
@@ -57,9 +56,9 @@ public class CustomWebsocketHandler extends TextWebSocketHandler {
 
 	private void handleSubscribe(WebSocketSession session, InMessage inMessage) throws IOException {
 		try {
-			chatService.isChatExist(inMessage.destination());
-			chatService.isChatMember(inMessage.destination(), inMessage.sender());
-			sessionManager.subscribe(session.getId(), inMessage.destination());
+			if (chatService.isJoinedMember(inMessage.destination(), inMessage.sender())) {
+				sessionManager.subscribe(session.getId(), inMessage.destination());
+			}
 		} catch (Exception e) {
 			sendErrorMessage(session, "채팅방 입장 실패");
 		}
@@ -73,11 +72,19 @@ public class CustomWebsocketHandler extends TextWebSocketHandler {
 	}
 
 	private void handleChatMessage(WebSocketSession session, InMessage inMessage) throws IOException {
-		chatService.isChatMember(inMessage.destination(), inMessage.sender());
+		if (!chatService.isJoinedMember(inMessage.destination(), inMessage.sender())) {
+			return;
+		}
 		Instant now = Instant.now();
 		OutMessage outMessage = new OutMessage(ServerCommand.MESSAGE, inMessage.destination(), inMessage.sender(),
 			inMessage.content(), now);
 		String textOutMessage = objectMapper.writeValueAsString(outMessage);
+
+		try {
+			chatService.saveMessage(inMessage.destination(), inMessage.sender(), inMessage.content(), now);
+		} catch (Exception e) {
+			return;
+		}
 
 		sessionManager.getChatMembers(inMessage.destination())
 			.forEach(chatMemberSession ->

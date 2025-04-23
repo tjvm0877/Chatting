@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.hello.chatting.global.jwt.JwtProvider;
-import com.hello.chatting.global.resolver.LoginArgumentResolver;
+import com.hello.chatting.global.resolver.SignInArgumentResolver;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-		resolvers.add(new LoginArgumentResolver(jwtProvider));
+		resolvers.add(new SignInArgumentResolver(jwtProvider));
 	}
 
 	@Override

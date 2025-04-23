@@ -5,24 +5,16 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hello.chatting.domain.member.application.MemberService;
 import com.hello.chatting.domain.member.dto.MemberResponse;
-import com.hello.chatting.domain.member.dto.SignInRequest;
-import com.hello.chatting.domain.member.dto.SignUpRequest;
-import com.hello.chatting.global.annotation.CurrentUser;
-import com.hello.chatting.global.annotation.LoginRequired;
+import com.hello.chatting.global.annotation.CurrentMember;
+import com.hello.chatting.global.annotation.SignInRequired;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -30,27 +22,16 @@ public class MemberController {
 
 	private final MemberService memberService;
 
-	@PostMapping("/sign-up")
-	public ResponseEntity<?> signUp(@RequestBody @Valid SignUpRequest request) {
-		MemberResponse response = memberService.signUp(request);
-		return ResponseEntity.ok(response);
-	}
-
-	@PostMapping("/sign-in")
-	public ResponseEntity<?> signIn(@RequestBody @Valid SignInRequest request) {
-		return ResponseEntity.ok(memberService.signIn(request));
-	}
-
 	@GetMapping
-	@LoginRequired
-	public ResponseEntity<?> getInfo(@CurrentUser UUID memberPublicId) {
-		MemberResponse response = memberService.getMemberInfo(memberPublicId);
+	@SignInRequired
+	public ResponseEntity<?> getMember(@CurrentMember UUID memberPublicId) {
+		MemberResponse response = memberService.findMember(memberPublicId);
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/find")
-	@LoginRequired
-	public ResponseEntity<?> getMemberList() {
+	@GetMapping("/list")
+	@SignInRequired
+	public ResponseEntity<?> getMembers() {
 		List<MemberResponse> response = memberService.getMemberList();
 		return ResponseEntity.ok(response);
 	}

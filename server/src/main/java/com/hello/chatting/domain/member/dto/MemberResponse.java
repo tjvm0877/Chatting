@@ -9,8 +9,7 @@ public record MemberResponse(
 	String email,
 	String name
 ) {
-
-	public static MemberResponse of(Member member) {
+	public static MemberResponse from(Member member) {
 		return new MemberResponse(member.getUuid(), member.getEmail(), member.getName());
 	}
 }

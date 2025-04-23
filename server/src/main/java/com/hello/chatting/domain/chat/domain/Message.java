@@ -5,8 +5,6 @@ import java.time.Instant;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.hello.chatting.domain.member.domain.Member;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -31,23 +29,23 @@ public class Message {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "memberId")
-	private Member sender;
-
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "chatId")
 	private Chat chat;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chatMemberId")
+	private ChatMember sender;
 
 	@Column(name = "content", nullable = false)
 	private String content;
 
-	@CreatedDate
-	@Column(name = "sentAt", updatable = false)
+	@Column(name = "sent_at", updatable = false)
 	private Instant sentAt;
 
-	public Message(Member sender, Chat chat, String content) {
-		this.sender = sender;
+	public Message(Chat chat, ChatMember sender, String content, Instant sentAt) {
 		this.chat = chat;
+		this.sender = sender;
 		this.content = content;
+		this.sentAt = sentAt;
 	}
 }

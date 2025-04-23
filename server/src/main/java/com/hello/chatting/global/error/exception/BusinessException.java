@@ -1,4 +1,4 @@
-package com.hello.chatting.global.error;
+package com.hello.chatting.global.error.exception;
 
 import lombok.Getter;
 
@@ -17,4 +17,3 @@ public class BusinessException extends RuntimeException {
 		this.errorCode = errorCode;
 	}
 }
-

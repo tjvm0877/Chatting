@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import com.hello.chatting.global.error.exception.BusinessException;
+import com.hello.chatting.global.error.exception.ErrorCode;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
