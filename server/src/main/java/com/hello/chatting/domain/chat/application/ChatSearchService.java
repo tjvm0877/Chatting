@@ -23,19 +23,27 @@ public class ChatSearchService {
 	private final MessageRepository messageRepository;
 
 	public List<ChatResponse> getJoinedChat(UUID memberPublicId) {
-		List<ChatMember> chatMembers = chatMemberRepository.findAllWithChatAndMembersByMemberUuid(memberPublicId);
+		List<ChatMember> chatMembers = chatMemberRepository.findAllWithChatAndMembers(memberPublicId);
+
 		return chatMembers.stream()
 			.map(ChatMember::getChat)
+			.distinct()
 			.map(chat -> {
 				String chatName = chat.getName();
 				if (chatName == null || chatName.isEmpty()) {
 					List<String> otherNames = chat.getChatMembers().stream()
 						.map(ChatMember::getMember)
-						.filter(member -> member != null && !memberPublicId.equals(member.getUuid()))
+						.filter(member ->
+							member != null &&
+								!member.getUuid().equals(memberPublicId)
+						)
 						.map(Member::getName)
 						.filter(name -> name != null && !name.isEmpty())
 						.toList();
-					chatName = String.join(", ", otherNames);
+
+					chatName = otherNames.isEmpty()
+						? "새 채팅"
+						: String.join(", ", otherNames);
 				}
 				return new ChatResponse(chat.getUuid(), chatName);
 			})

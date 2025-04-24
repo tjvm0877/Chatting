@@ -30,8 +30,14 @@ public class ChatMember {
 	@JoinColumn(name = "chat_id")
 	private Chat chat;
 
-	public ChatMember(Member member, Chat chat) {
+	public ChatMember(Member member) {
 		this.member = member;
+	}
+
+	public void assignChat(Chat chat) {
 		this.chat = chat;
+		if (chat != null && !chat.getChatMembers().contains(this)) {
+			chat.addChatMember(this);
+		}
 	}
 }

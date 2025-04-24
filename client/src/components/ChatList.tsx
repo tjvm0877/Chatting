@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Button,
   Divider,
   List,
   ListItem,
@@ -11,14 +10,24 @@ import {
 import React, { useEffect, useState } from 'react';
 import useChatStore from '../stores/chatStore';
 import { ChatInfo, getChatList } from '../api/chat';
-import { RestartAlt } from '@mui/icons-material';
+import { useMemberStore } from '../stores/userStore';
 
-const ChatList = () => {
+interface ChatListProps {
+  isModalOpen: boolean;
+}
+
+const ChatList = ({ isModalOpen }: ChatListProps) => {
+  const chatId = useChatStore((state) => state.chatId);
+  const member = useMemberStore((state) => state.member);
   const setChatId = useChatStore((state) => state.setChatId);
   const setChatName = useChatStore((state) => state.setName);
   const [chatList, setChatList] = useState<ChatInfo[]>([]);
 
   const requestChatList = async () => {
+    if (isModalOpen) {
+      return;
+    }
+
     try {
       const data = await getChatList();
       setChatList(data);
@@ -29,7 +38,7 @@ const ChatList = () => {
 
   useEffect(() => {
     requestChatList();
-  }, []);
+  }, [chatId, member, isModalOpen]);
 
   const handleSelectChat = (selectedChat: ChatInfo) => {
     console.log(selectedChat);
@@ -57,7 +66,6 @@ const ChatList = () => {
               </ListItemAvatar>
               <ListItemText
                 primary={chat.name}
-                secondary={'최근 메시지...'}
                 slotProps={{
                   secondary: {
                     sx: {
@@ -75,14 +83,14 @@ const ChatList = () => {
           {index < chatList.length - 1 && <Divider component="li" />}
         </React.Fragment>
       ))}
-      <Button
+      {/* <Button
         fullWidth
-        variant="contained"
+        variant="text"
         startIcon={<RestartAlt />}
         onClick={requestChatList}
       >
         Reload
-      </Button>
+      </Button> */}
     </List>
   );
 };

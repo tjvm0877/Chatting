@@ -4,9 +4,11 @@ import ChatList from '../components/ChatList';
 import ChatHeader from '../components/ChatHeader';
 import ChatLog from '../components/ChatLog';
 import ChatInput from '../components/ChatInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CreateChat from '../components/CreateChat';
 import { AddBox } from '@mui/icons-material';
+import { useNavigate } from 'react-router';
+import useAuthStore from '../stores/authStore';
 
 // 스타일 객체 분리
 const styles = {
@@ -66,6 +68,8 @@ const styles = {
 
 const Chat = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const isSignIn = useAuthStore((state) => state.isSignIn);
+  const navigate = useNavigate();
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -74,6 +78,12 @@ const Chat = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    if (!isSignIn) {
+      navigate('/sign-in');
+    }
+  }, []);
 
   return (
     <Box sx={styles.container}>

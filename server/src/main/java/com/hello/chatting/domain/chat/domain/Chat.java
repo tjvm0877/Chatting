@@ -36,4 +36,11 @@ public class Chat {
 		this.uuid = UUID.randomUUID();
 		this.name = name;
 	}
+
+	// 편의 메서드
+	public void addChatMember(ChatMember chatMember) {
+		chatMembers.add(chatMember);
+		chatMember.assignChat(this);
+	}
+
 }

@@ -34,12 +34,15 @@ public class ChatManagementService {
 		if (requester.equals(recipient)) {
 			throw new CreateChatFailedException();
 		}
-		Chat chat = new Chat(requester.getName() + "-" + recipient.getName());
+		Chat chat = new Chat(null);
 		chatRepository.save(chat);
-		ChatMember chatMember1 = new ChatMember(requester, chat);
-		ChatMember chatMember2 = new ChatMember(recipient, chat);
-		chatMemberRepository.saveAll(List.of(chatMember1, chatMember2));
 
+		ChatMember requesterChatMember = new ChatMember(requester);
+		ChatMember recipientChatMember = new ChatMember(recipient);
+		chat.addChatMember(requesterChatMember);
+		chat.addChatMember(recipientChatMember);
+		chatMemberRepository.saveAll(List.of(requesterChatMember, recipientChatMember));
+		
 		return new ChatCreateResponse(chat.getUuid());
 	}
 }

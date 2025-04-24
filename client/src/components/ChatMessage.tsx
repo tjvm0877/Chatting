@@ -25,6 +25,18 @@ const ChatMessage = ({ type, content, timestamp }: ChatMessageProps) => {
     }
   };
 
+  const parseTimestamp = (timestamp?: string): string => {
+    const value = timestamp || new Date().toISOString();
+    const date = new Date(value);
+    if (isNaN(date.getTime())) {
+      return '00:00';
+    }
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+
+    return `${hours}:${minutes}`;
+  };
+
   return (
     <Box
       sx={{
@@ -38,11 +50,7 @@ const ChatMessage = ({ type, content, timestamp }: ChatMessageProps) => {
       }}
     >
       {type === 'RECEIVED' && (
-        <Avatar
-          sx={{ bgcolor: deepOrange[500], width: '1.5em', height: '1.5em' }}
-        >
-          H
-        </Avatar>
+        <Avatar sx={{ width: '1.5em', height: '1.5em' }}>U</Avatar>
       )}
 
       <Box
@@ -64,7 +72,7 @@ const ChatMessage = ({ type, content, timestamp }: ChatMessageProps) => {
           paddingBottom: 0.5,
         }}
       >
-        {timestamp}
+        {parseTimestamp(timestamp)}
       </Typography>
     </Box>
   );

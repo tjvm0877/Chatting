@@ -57,7 +57,7 @@ const CreateChat = ({ isModalOpen, onClose }: CreateChatProps) => {
 
   const handleCreateChat = async (selectedMember: memberInfo) => {
     try {
-      requestCreateChat(selectedMember.uuid);
+      await requestCreateChat(selectedMember.uuid);
       onClose();
     } catch (error) {
       console.log(error);
