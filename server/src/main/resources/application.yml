@@ -12,6 +12,13 @@ spring:
     console:
       enabled: true
       path: /h2-console
+springdoc:
+  swagger-ui:
+    path: api
+    tags-sorter: alpha
+    operations-sorter: alpha
+  paths-to-match:
+    - /**
 jwt:
   secret: "c3ByaW5nLWJvb3Qtc2VsZi1wcm9qZWN0LWlzLWJsb2ctc2VydmljZS1sb2NhbAo="
   expiration: 360000000

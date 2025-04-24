@@ -18,11 +18,16 @@ import com.hello.chatting.domain.chat.dto.ChatResponse;
 import com.hello.chatting.global.annotation.CurrentMember;
 import com.hello.chatting.global.annotation.SignInRequired;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/chats")
 @RequiredArgsConstructor
+@Tag(name = "채팅", description = "채팅 관련 API")
 public class ChatController {
 
 	private final ChatManagementService chatManagementService;
@@ -30,7 +35,11 @@ public class ChatController {
 
 	@PostMapping
 	@SignInRequired
-	public ResponseEntity<?> createNewChat(@CurrentMember UUID memberPublicId,
+	@Operation(
+		summary = "채팅방 생성",
+		description = " [Authorization 헤더(JWT) 필요] 새로운 채팅방을 생성합니다.",
+		security = @SecurityRequirement(name = "Authorization"))
+	public ResponseEntity<?> createNewChat(@Parameter(hidden = true) @CurrentMember UUID memberPublicId,
 		@RequestParam("recipient") UUID recipient) {
 		ChatCreateResponse response = chatManagementService.create(memberPublicId, recipient);
 		return ResponseEntity.ok(response);
@@ -38,13 +47,21 @@ public class ChatController {
 
 	@GetMapping
 	@SignInRequired
-	public ResponseEntity<?> getChatList(@CurrentMember UUID memberPublicId) {
+	@Operation(
+		summary = "사용자가 참여한 채팅방 조회",
+		description = " [Authorization 헤더(JWT) 필요] 사용자가 참여한 모든 채팅방을 조회합니다.",
+		security = @SecurityRequirement(name = "Authorization"))
+	public ResponseEntity<?> getChatList(@Parameter(hidden = true) @CurrentMember UUID memberPublicId) {
 		List<ChatResponse> response = chatSearchService.getJoinedChat(memberPublicId);
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/logs")
 	@SignInRequired
+	@Operation(
+		summary = "채팅 기록 조회",
+		description = " [Authorization 헤더(JWT) 필요] 채팅 기록을 조회합니다. `lastChatId`를 통해 페이징을 할 수 있습니다.",
+		security = @SecurityRequirement(name = "Authorization"))
 	public ResponseEntity<?> getChatLogs(
 		@RequestParam(value = "chat") UUID chatPublicId,
 		@RequestParam(value = "lastChatId", required = false) Long lastChatId,
