@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Modal } from '@mui/material';
-import UserInfo from '../components/UserInfo';
+import MemberInfo from '../components/UserInfo';
 import ChatList from '../components/ChatList';
 import ChatHeader from '../components/ChatHeader';
 import ChatLog from '../components/ChatLog';
@@ -85,7 +85,7 @@ const Chat = () => {
       <Grid container sx={styles.gridContainer}>
         <Grid size={4} sx={styles.leftGrid}>
           <Box sx={styles.userInfoBox}>
-            <UserInfo />
+            <MemberInfo />
           </Box>
           <Box sx={styles.createChatBottun}>
             <Button

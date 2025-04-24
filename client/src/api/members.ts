@@ -1,38 +1,14 @@
 import axiosInstance from './axios';
 
-export const signIn = async (email: string, password: string) => {
-  try {
-    const response = await axiosInstance.post('/members/sign-in', {
-      email,
-      password,
-    });
-    const accessToken = response.data.accessToken;
-    localStorage.setItem('accessToken', accessToken);
-    console.log('SignIn successful:', accessToken);
-    return accessToken;
-  } catch (error) {
-    console.error('SignIn failed:', error);
-    throw error;
-  }
-};
+export interface UserInfo {
+  uuid: string;
+  name: string;
+  email: string;
+}
 
-export const signUp = async (email: string, name: string, password: string) => {
+export const getUserInfo = async (): Promise<UserInfo> => {
   try {
-    await axiosInstance.post('/members/sign-up', {
-      email,
-      name,
-      password,
-    });
-    console.log('SignUp successful');
-  } catch (error) {
-    console.error('SignUp failed:', error);
-    throw error;
-  }
-};
-
-export const getUserInfo = async () => {
-  try {
-    const response = await axiosInstance.get('/members');
+    const response = await axiosInstance.get<UserInfo>('/members');
     return response.data;
   } catch (error) {
     console.error('Failed to fetch user info:', error);
@@ -40,9 +16,9 @@ export const getUserInfo = async () => {
   }
 };
 
-export const getUserList = async () => {
+export const getUserList = async (): Promise<UserInfo[]> => {
   try {
-    const response = await axiosInstance.get('/members/find');
+    const response = await axiosInstance.get<UserInfo[]>('/members/list');
     return response.data;
   } catch (error) {
     console.error('Failed to fetch user info:', error);

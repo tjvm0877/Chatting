@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Divider,
   List,
   ListItem,
@@ -8,52 +9,32 @@ import {
   ListItemText,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { getChatList } from '../api/chat';
 import useChatStore from '../stores/chatStore';
+import { ChatInfo, getChatList } from '../api/chat';
+import { RestartAlt } from '@mui/icons-material';
 
-interface ChatInfo {
-  chatId: string;
-  chatName: string;
-  chatMembers: ChatMember[];
-}
-
-interface ChatMember {
-  name: string;
-  uuid: string;
-}
-
-interface ChatListProps {
-  isModalOpen: boolean;
-}
-
-const ChatList = ({ isModalOpen }: ChatListProps) => {
-  const setChat = useChatStore((state) => state.setChatId);
+const ChatList = () => {
+  const setChatId = useChatStore((state) => state.setChatId);
   const setChatName = useChatStore((state) => state.setName);
   const [chatList, setChatList] = useState<ChatInfo[]>([]);
 
+  const requestChatList = async () => {
+    try {
+      const data = await getChatList();
+      setChatList(data);
+    } catch (error) {
+      console.error('채팅 리스트를 불러오지 못했습니다:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchChatList = async () => {
-      try {
-        const data = await getChatList();
-        const chats: ChatInfo[] = data.map((item: any) => ({
-          chatId: item.uuid,
-          chatName: item.name,
-          chatMembers: item.chatMembers.map((item: any) => ({
-            name: item.name,
-            uuid: item.uuid,
-          })),
-        }));
-        setChatList(chats);
-      } catch (error) {
-        console.error('채팅 리스트를 불러오지 못했습니다:', error);
-      }
-    };
-    fetchChatList();
-  }, [isModalOpen]);
+    requestChatList();
+  }, []);
 
   const handleSelectChat = (selectedChat: ChatInfo) => {
-    setChat(selectedChat.chatId);
-    setChatName(selectedChat.chatName);
+    console.log(selectedChat);
+    setChatId(selectedChat.uuid);
+    setChatName(selectedChat.name);
   };
 
   return (
@@ -62,20 +43,20 @@ const ChatList = ({ isModalOpen }: ChatListProps) => {
       role="list"
       aria-label="chat list"
     >
-      {chatList.map((item, index) => (
-        <React.Fragment key={item.chatId}>
+      {chatList.map((chat, index) => (
+        <React.Fragment key={chat.uuid}>
           <ListItem alignItems="flex-start">
             <ListItemButton
-              onClick={() => handleSelectChat(item)}
+              onClick={() => handleSelectChat(chat)}
               sx={{
                 '&:hover': { backgroundColor: 'action.hover' },
               }}
             >
               <ListItemAvatar>
-                <Avatar>{item.chatName.charAt(0)}</Avatar>
+                <Avatar>{chat.name.charAt(0)}</Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={item.chatName}
+                primary={chat.name}
                 secondary={'최근 메시지...'}
                 slotProps={{
                   secondary: {
@@ -94,6 +75,14 @@ const ChatList = ({ isModalOpen }: ChatListProps) => {
           {index < chatList.length - 1 && <Divider component="li" />}
         </React.Fragment>
       ))}
+      <Button
+        fullWidth
+        variant="contained"
+        startIcon={<RestartAlt />}
+        onClick={requestChatList}
+      >
+        Reload
+      </Button>
     </List>
   );
 };

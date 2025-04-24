@@ -8,11 +8,9 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
-// Add a response interceptor for error handling
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle errors globally
     console.error(error);
     return Promise.reject(error);
   }

@@ -8,10 +8,13 @@ import { Logout } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 import webSocketClient from '../api/websocket';
 import useAuthStore from '../stores/authStore';
+import useChatStore from '../stores/chatStore';
 
-const UserInfo = () => {
-  const user = useMemberStore((state) => state.member);
-  const setUser = useMemberStore((state) => state.setMember);
+const MemberInfo = () => {
+  const member = useMemberStore((state) => state.member);
+  const setMember = useMemberStore((state) => state.setMember);
+  const clearMember = useMemberStore((state) => state.clearUser);
+  const clearChat = useChatStore((state) => state.clearChat);
   const setIsSignIn = useAuthStore((state) => state.setIsSignIn);
   const navigate = useNavigate();
 
@@ -25,16 +28,18 @@ const UserInfo = () => {
           email: data.email,
           avatarUrl: data.name.charAt(0) || '?',
         };
-        setUser(user);
+        setMember(user);
       } catch (error) {
         console.error('유저 정보를 불러오지 못했습니다:', error);
       }
     };
     fetchUser();
-  }, [setUser]);
+  }, [setMember]);
 
   const handleLogout = () => {
     webSocketClient.disconnect();
+    clearMember();
+    clearChat();
     localStorage.clear();
     setIsSignIn(false);
     navigate('/sign-in');
@@ -52,11 +57,11 @@ const UserInfo = () => {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Avatar>{user?.avatarUrl}</Avatar>
+        <Avatar>{member?.avatarUrl}</Avatar>
         <Box>
-          <Typography fontWeight="bold">{user?.name}</Typography>
+          <Typography fontWeight="bold">{member?.name}</Typography>
           <Typography variant="caption" color="text.secondary">
-            {user?.email}
+            {member?.email}
           </Typography>
         </Box>
       </Box>
@@ -67,4 +72,4 @@ const UserInfo = () => {
   );
 };
 
-export default UserInfo;
+export default MemberInfo;

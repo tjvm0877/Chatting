@@ -41,16 +41,14 @@ const CreateChat = ({ isModalOpen, onClose }: CreateChatProps) => {
 
     const fetchUserInfo = async () => {
       const data = await getUserList();
-
       const members: memberInfo[] = data
-        .filter((item: any) => item.name !== user?.name)
-        .map((item: any) => ({
+        .filter((item) => item.name !== user?.name)
+        .map((item) => ({
           uuid: item.uuid,
           avatar: item.name.charAt(0),
           name: item.name,
           email: item.email,
         }));
-
       setMembers(members);
     };
 

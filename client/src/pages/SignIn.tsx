@@ -11,9 +11,10 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { signIn } from '../api/members';
+
 import useAuthStore from '../stores/authStore';
 import webSocketClient from '../api/websocket';
+import { signIn } from '../api/auth';
 
 const cardStyle = {
   display: 'flex',

@@ -29,5 +29,5 @@ export interface ReceiveMessage {
   destination: string;
   sender: string;
   content: string;
-  timeStamp: string;
+  timestamp: string;
 }
