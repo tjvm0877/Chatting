@@ -62,6 +62,7 @@ public class CustomWebsocketHandler extends TextWebSocketHandler {
 		} catch (Exception e) {
 			sendErrorMessage(session, "채팅방 입장 실패");
 		}
+		log.info("handleSubscribe success");
 	}
 
 	private void handleConnect(WebSocketSession session, InMessage inMessage) throws IOException {
@@ -69,6 +70,7 @@ public class CustomWebsocketHandler extends TextWebSocketHandler {
 		if (!authenticated) {
 			sendErrorMessage(session, "인증 실패");
 		}
+		log.info("handleConnect success");
 	}
 
 	private void handleChatMessage(WebSocketSession session, InMessage inMessage) throws IOException {
@@ -96,6 +98,7 @@ public class CustomWebsocketHandler extends TextWebSocketHandler {
 					}
 				}
 			);
+		log.info("handleChatMessage success");
 	}
 
 	private void sendErrorMessage(WebSocketSession session, String errorMessage) throws IOException {

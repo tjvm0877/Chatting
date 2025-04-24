@@ -31,6 +31,7 @@ public class ChatService {
 	public void saveMessage(UUID chatPublicId, UUID memberPublicId, String content, Instant sentAt) {
 		ChatMember chatMember = chatMemberRepository.findByChatUuidAndMemberUuid(chatPublicId, memberPublicId)
 			.orElseThrow(IllegalArgumentException::new);
-		new Message(chatMember.getChat(), chatMember, content, sentAt);
+		Message message = new Message(chatMember.getChat(), chatMember, content, sentAt);
+		messageRepository.save(message);
 	}
 }

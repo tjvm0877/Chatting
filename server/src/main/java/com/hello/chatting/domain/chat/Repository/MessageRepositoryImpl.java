@@ -30,6 +30,7 @@ public class MessageRepositoryImpl implements MessageRepositoryCustom {
 				message.chat.uuid.eq(chatId),
 				ltMessageId(lastMessageId)
 			)
+			.orderBy(message.id.asc())
 			.limit(size)
 			.fetch();
 	}

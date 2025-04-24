@@ -37,7 +37,7 @@ public class AuthService {
 
 	public SignInResponse signIn(SignInRequest request) {
 		Member member = memberRepository.findByEmail(request.email()).orElseThrow(MemberNotFoundException::new);
-		if (passwordEncoder.matches(request.password(), member.getPassword())) {
+		if (!passwordEncoder.matches(request.password(), member.getPassword())) {
 			throw new SignInFailedException();
 		}
 		String accessToken = jwtProvider.generateAccessToken(member.getUuid().toString());
